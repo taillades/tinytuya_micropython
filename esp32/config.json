@@ -1,0 +1,120 @@
+{
+  "wifi": {
+    "ssid": "Pantoufles",
+    "password": "char3nta1$3$"
+  },
+  "button": {
+    "pin": 32,
+    "debounce_ms": 1000,
+    "press_time_ms": 100
+  },
+  "devices": [
+    {
+        "id": "ebf7a5727404f9c68dzbtt",
+        "ip": "10.0.0.127",
+        "active": 2,
+        "encrypt": true,
+        "productKey": "keyjup78v54myhan",
+        "token": true,
+        "wf_cfg": true,
+        "name": "Small lamp 1",
+        "key": ":Z0a)->~SAorHTzb",
+        "mac": "38:2c:e5:cb:29:f8",
+        "ability": 0,
+        "dev_type": "default",
+        "err": "",
+        "type": "default",
+        "dps": {
+            "dps": {
+                "1": false,
+                "9": 0,
+                "38": "memory",
+                "40": "relay",
+                "41": false,
+                "42": "",
+                "43": "",
+                "44": ""
+            }
+        },
+        "origin": "broadcast",
+        "ver": "3.4"
+    },
+    {
+        "id": "eb4453b5fa9c46611etgar",
+        "ip": "10.0.0.248",
+        "active": 2,
+        "encrypt": true,
+        "productKey": "keyjup78v54myhan",
+        "token": true,
+        "wf_cfg": true,
+        "name": "Tall lamp",
+        "key": "TFcR8AI<7Lysf~+>",
+        "mac": "38:2c:e5:cb:4c:7c",
+        "ability": 0,
+        "dev_type": "default",
+        "err": "",
+        "type": "default",
+        "dps": {
+            "dps": {
+                "1": false,
+                "9": 0,
+                "38": "memory",
+                "40": "relay",
+                "41": false,
+                "42": "",
+                "43": "",
+                "44": ""
+            }
+        },
+        "origin": "broadcast",
+        "ver": "3.4"
+    },
+    {
+        "id": "eb14cf40fea1e680dcfk95",
+        "ip": "10.0.0.25",
+        "active": 2,
+        "encrypt": true,
+        "productKey": "keyjup78v54myhan",
+        "token": true,
+        "wf_cfg": true,
+        "name": "",
+        "key": "",
+        "mac": "",
+        "ability": 0,
+        "dev_type": "default",
+        "origin": "broadcast",
+        "ver": "3.4"
+    },
+    {
+        "id": "eb66d363a50aa9f52ek0r0",
+        "ip": "10.0.0.33",
+        "active": 2,
+        "encrypt": true,
+        "productKey": "keyjup78v54myhan",
+        "token": true,
+        "wf_cfg": true,
+        "name": "Yves room",
+        "key": "jKLAO_#RVbv|hdz9",
+        "mac": "38:2c:e5:ca:fd:e3",
+        "ability": 0,
+        "dev_type": "default",
+        "err": "",
+        "type": "default",
+        "dps": {
+            "dps": {
+                "1": false,
+                "9": 0,
+                "38": "memory",
+                "40": "relay",
+                "41": false,
+                "42": "",
+                "43": "",
+                "44": ""
+            }
+        },
+        "origin": "broadcast",
+        "ver": "3.4"
+    }
+]
+}
+
