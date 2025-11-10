@@ -3,6 +3,7 @@ import time
 import socket
 import json
 import struct
+import gc
 from machine import Pin
 from binascii import crc32
 try:
@@ -358,9 +359,42 @@ def load_config(filename='config.json'):
         return None
 
 
+def check_wifi(ssid, password):
+    """Check WiFi and reconnect if needed."""
+    wlan = network.WLAN(network.STA_IF)
+    
+    # Ensure power saving is disabled
+    try:
+        wlan.config(pm=wlan.PM_NONE)
+    except:
+        pass
+    
+    if not wlan.isconnected():
+        print("[!] WiFi disconnected, reconnecting...")
+        wlan.active(True)
+        wlan.connect(ssid, password)
+        timeout = 10
+        while not wlan.isconnected() and timeout > 0:
+            time.sleep(1)
+            timeout -= 1
+        if not wlan.isconnected():
+            print("[!] WiFi reconnection failed!")
+            return False
+        print("[*] WiFi reconnected:", wlan.ifconfig()[0])
+    return True
+
+
 def connect_wifi(ssid, password):
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
+    
+    # Disable WiFi power saving to prevent sleep mode issues
+    try:
+        wlan.config(pm=wlan.PM_NONE)  # Disable power management
+        print("[*] WiFi power saving disabled")
+    except Exception:
+        pass  # Older MicroPython versions might not support this
+    
     if not wlan.isconnected():
         print("[*] Connecting to WiFi:", ssid)
         wlan.connect(ssid, password)
@@ -379,18 +413,32 @@ def toggle_all_devices(devices):
     """
     Toggle all devices. If not all in same state, turn all ON.
     """
+    # Run garbage collection to free memory
+    gc.collect()
+    
     print("[*] Checking all device states...")
     states = []
     
     # Get state of all devices
     for dev_info in devices:
+        # Force reconnect if no socket or connection looks stale
         if not dev_info['device'].socket:
+            print(f"[*] Connecting to {dev_info['name']}...")
             if not dev_info['device'].connect():
                 print(f"[!] Failed to connect to {dev_info['name']}")
                 states.append(None)
                 continue
         
         state = dev_info['device'].status()
+        
+        # If status failed, try reconnecting once
+        if state is None:
+            print(f"[!] Status failed for {dev_info['name']}, reconnecting...")
+            dev_info['device'].disconnect()
+            time.sleep(0.5)
+            if dev_info['device'].connect():
+                state = dev_info['device'].status()
+        
         states.append(state)
         print(f"[*] {dev_info['name']}: {'ON' if state else 'OFF' if state is not None else 'UNKNOWN'}")
     
@@ -497,9 +545,15 @@ def main():
     debounce_ms = button_cfg['debounce_ms']
     press_time_ms = button_cfg['press_time_ms']
     
+    # Store WiFi credentials for reconnection
+    wifi_ssid = config['wifi']['ssid']
+    wifi_password = config['wifi']['password']
+    
     last_press = 0
     button_was_pressed = False
     press_start_time = 0
+    last_gc_time = time.ticks_ms()
+    last_wifi_check = time.ticks_ms()
     
     print(f"[*] Ready! Press button on GPIO {button_cfg['pin']}")
     print(f"[*] Button must be held for {press_time_ms}ms to trigger")
@@ -508,6 +562,16 @@ def main():
     while True:
         button_state = button.value()
         current_time = time.ticks_ms()
+        
+        # Periodic WiFi check every 5 minutes (300000 ms)
+        if time.ticks_diff(current_time, last_wifi_check) > 300000:
+            check_wifi(wifi_ssid, wifi_password)
+            last_wifi_check = current_time
+        
+        # Periodic garbage collection every 60 seconds
+        if time.ticks_diff(current_time, last_gc_time) > 60000:
+            gc.collect()
+            last_gc_time = current_time
         
         if button_state == 0 and not button_was_pressed:
             if time.ticks_diff(current_time, last_press) > debounce_ms:

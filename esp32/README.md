@@ -326,14 +326,15 @@ This implementation supports **Tuya Protocol 3.4** with:
 
 ## Advanced: Choosing GPIO Pins
 
-Safe GPIOs for buttons:
+**Safe GPIOs for button:**
 - ✅ GPIO 32 (default)
 - ✅ GPIO 33
-- ✅ GPIO 25
 - ✅ GPIO 26
 - ✅ GPIO 27
+- ✅ GPIO 25
+- ✅ GPIO 14
 
-Avoid these:
+**Avoid these:**
 - ❌ GPIO 0, 2, 5, 12, 15 (boot strapping pins)
 - ❌ GPIO 6-11 (connected to internal flash)
 - ❌ GPIO 34-39 (input only, no pull-up resistors)
