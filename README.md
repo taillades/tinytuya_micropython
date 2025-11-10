@@ -37,5 +37,3 @@ To control your plug locally, you need the `tuya-raw.json` containing your devic
     - This will:
         - Discover devices via local broadcast.
         - Display the device info needed for local control.
-
-# tinytuya_micropython
